@@ -15,9 +15,12 @@ func worker(id int, jobs <-chan int, results chan<- int) {
 
 func main() {
 	var worker_queues = 4
-	//var worker_threads = 4
-	var jobs_queues [] chan int
-	jobs_queues = make([](chan int), worker_queues, 100)
+
+	jobs_queues := make([](chan int), worker_queues, 100)
+	for q := 0; q < worker_queues; q++ {
+		jobs_queues[q] = make(chan int, 100)
+	}
+
 	results := make(chan int, 100)
 
 	fmt.Println(len(jobs_queues))
@@ -34,5 +37,8 @@ func main() {
 
 	for i := 0; i < worker_queues; i++ {
 		close(jobs_queues[i])
+	}
+	for a := 0; a < 10; a++ {
+		<-results
 	}
 }
